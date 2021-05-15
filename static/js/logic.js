@@ -14,9 +14,9 @@ function createFeatures(data) {
     // Define a function we want to run once for each feature in the features array
     // Give each feature a popup describing the place and time of the earthquake
     function onEachFeature(feature, layer) {
-      layer.bindPopup("<h3>" + feature.properties.place +
-      "</h3><hr><p>" + feature.properties.mag +
-      "</h3><hr><p>" + new Date(feature.properties.time) + "</p>"
+      layer.bindPopup("<h2>" + feature.properties.place +
+      "</h3><hr><p>Magnitude: " + feature.properties.mag + 
+      "</h3><p>" + new Date(feature.properties.time) + "</p>"
       );
     }
 
@@ -27,15 +27,15 @@ function createFeatures(data) {
 
     // Draw marker colours
     function markerColour(magnitude) {
-        // Magnitude 1 
+        // Magnitude up to 1 
         if (magnitude < 1) {
             return "yellow"
         }
-        // Magnitude 2 to 4
-        else if (magnitude < 2) {
+        // Magnitude up to 3
+        else if (magnitude < 3) {
             return "orange"
         }
-        // Magnitude 4 to 5
+        // Magnitude up to 5
         else if (magnitude < 5) {
             return "red"
         }
