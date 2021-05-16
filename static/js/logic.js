@@ -1,18 +1,19 @@
 // Store our API endpoint inside queryUrl
 var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+var platesUrl = ""
 
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
     // Once we get a response, send the data.features object to the createFeatures function
     createFeatures(data.features);
-    console.log(data.features);
+    // console.log(data.features);
 });
 
 function createFeatures(data) {
-    console.log(data);
+    // console.log(data);
 
     // Define a function we want to run once for each feature in the features array
-    // Give each feature a popup describing the place and time of the earthquake
+    // Give each feature a popup describing the place, magnitude, and time of the earthquake
     function onEachFeature(feature, layer) {
       layer.bindPopup("<h2>" + feature.properties.place +
       "</h3><hr><p>Magnitude: " + feature.properties.mag + 
@@ -22,24 +23,32 @@ function createFeatures(data) {
 
     // Draw marker radius
     function markerRadius(magnitude) {
-        return magnitude * 20000; 
+        return magnitude * 30000; 
     }
 
     // Draw marker colours
     function markerColour(magnitude) {
         // Magnitude up to 1 
         if (magnitude < 1) {
+            return "#E6E696"
+        }
+        // Magnitude 1 to 2
+        else if (magnitude < 2) {
             return "yellow"
         }
-        // Magnitude up to 3
+        // Magnitude 2 to 3
         else if (magnitude < 3) {
             return "orange"
         }
-        // Magnitude up to 5
-        else if (magnitude < 5) {
+        // Magnitude 3 to 4
+        else if (magnitude < 4) {
             return "red"
         }
-        // Magnitude > 5
+        // Magnitude 4 to 5
+        else if (magnitude < 5) {
+            return "maroon"
+        }
+        // Magnitude 5 and up
         else {
             return "brown"        
         }
@@ -53,7 +62,7 @@ function createFeatures(data) {
             return L.circle(latlng, {
                 radius: markerRadius(earthquakeData.properties.mag),
                 color: markerColour(earthquakeData.properties.mag),
-                fillOpacity: 0.6
+                fillOpacity: 0.9
             });
         },
         onEachFeature: onEachFeature
@@ -61,8 +70,7 @@ function createFeatures(data) {
     
     // Sending our earthquakes layer to the createMap function
     createMap(earthquakes);
- }
-
+}
 
 function createMap(earthquakes) {
 
@@ -121,4 +129,27 @@ function createMap(earthquakes) {
     L.control.layers(baseMaps, overlayMaps, {
         collapsed: false
     }).addTo(myMap);
+
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function() {
+        var div = L.DomUtil.create('div', 'info legend');
+        // div.innerHTML += "<h4>Magnitude</h4>";
+        div.innerHTML += '<i style="background: #E6E696"></i><span>0-1</span><br>';
+        div.innerHTML += '<i style="background: yellow"></i><span>1-2</span><br>';
+        div.innerHTML += '<i style="background: orange"></i><span>2-3</span><br>';
+        div.innerHTML += '<i style="background: red"></i><span>3-4</span><br>';
+        div.innerHTML += '<i style="background: brown"></i><span>4-5</span><br>';
+        div.innerHTML += '<i style="background: maroon"></i><span>5+</span><br>';
+        // var labels = ["0-1", "1-2", "2-3", "3-4", "4-5", "5+"];
+        // var colors = ["grey", "yellow", "orange", "red", "brown", "maroon"];
+    
+        // loop through our density intervals and generate a label with a colored background for each interval
+        // for (var i = 0; i < colors.length; i++) {
+        //     div.innerHTML +=
+        //         '<li style="background:' + colors[i] + '">' + labels[i] + '</li>';
+        //     }
+        return div;
+    }
+    legend.addTo(myMap);
+
 }

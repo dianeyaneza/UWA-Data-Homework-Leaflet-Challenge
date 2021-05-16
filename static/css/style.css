@@ -8,3 +8,27 @@ body,
 html {
   height: 100%;
 }
+
+/*Legend specific*/
+.legend {
+  padding: 9px 8px;
+  font: 12px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  color: #555;
+}
+
+.legend span {
+  position: relative;
+  line-height: 18px;
+  bottom: 2px;
+}
+
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin: 0 8px 0 0;
+  opacity: 0.9;
+}
