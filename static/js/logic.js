@@ -13,11 +13,11 @@ function createFeatures(data) {
     // console.log(data);
 
     // Define a function we want to run once for each feature in the features array
-    // Give each feature a popup describing the place, magnitude, and time of the earthquake
+    // Give each feature a popup describing the place, time, magnitude of the earthquake
     function onEachFeature(feature, layer) {
-      layer.bindPopup("<h2>" + feature.properties.place +
-      "</h3><hr><p>Magnitude: " + feature.properties.mag + 
-      "</h3><p>" + new Date(feature.properties.time) + "</p>"
+      layer.bindPopup("<h3>" + feature.properties.place +
+      "</h3><hr><p>" + new Date(feature.properties.time) + "</p>" +
+      "<p>Magnitude: " + feature.properties.mag
       );
     }
 
@@ -52,7 +52,6 @@ function createFeatures(data) {
         else {
             return "brown"        
         }
-
     }
   
     // Create a GeoJSON layer containing the features array on the earthquakeData object
@@ -112,7 +111,6 @@ function createMap(earthquakes) {
         Earthquakes: earthquakes
     };
 
-  
     // Create our map, giving it the satellitemap and earthquakes layers to display on load
     var myMap = L.map("map", {
       center: [
@@ -122,7 +120,6 @@ function createMap(earthquakes) {
       layers: [satellitemap, earthquakes]
     });
 
-
     // Create a layer control
     // Pass in our baseMaps and overlayMaps
     // Add the layer control to the map
@@ -130,24 +127,16 @@ function createMap(earthquakes) {
         collapsed: false
     }).addTo(myMap);
 
+    // legend (styled in css file)
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function() {
         var div = L.DomUtil.create('div', 'info legend');
-        // div.innerHTML += "<h4>Magnitude</h4>";
         div.innerHTML += '<i style="background: #E6E696"></i><span>0-1</span><br>';
         div.innerHTML += '<i style="background: yellow"></i><span>1-2</span><br>';
         div.innerHTML += '<i style="background: orange"></i><span>2-3</span><br>';
         div.innerHTML += '<i style="background: red"></i><span>3-4</span><br>';
         div.innerHTML += '<i style="background: brown"></i><span>4-5</span><br>';
         div.innerHTML += '<i style="background: maroon"></i><span>5+</span><br>';
-        // var labels = ["0-1", "1-2", "2-3", "3-4", "4-5", "5+"];
-        // var colors = ["grey", "yellow", "orange", "red", "brown", "maroon"];
-    
-        // loop through our density intervals and generate a label with a colored background for each interval
-        // for (var i = 0; i < colors.length; i++) {
-        //     div.innerHTML +=
-        //         '<li style="background:' + colors[i] + '">' + labels[i] + '</li>';
-        //     }
         return div;
     }
     legend.addTo(myMap);
